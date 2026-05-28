@@ -1,4 +1,4 @@
-import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, CalendarDays, Wallet } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatRupiah } from "@/lib/format";
@@ -10,6 +10,20 @@ type Props = {
   balance: number;
   filterLabel: string;
 };
+
+function PeriodBadge({ label, className }: { label: string; className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex w-fit items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium",
+        className,
+      )}
+    >
+      <CalendarDays className="size-3" />
+      {label}
+    </span>
+  );
+}
 
 export function BalanceSummary({
   totalIncome,
@@ -33,8 +47,11 @@ export function BalanceSummary({
             {formatRupiah(totalIncome)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-xs text-muted-foreground">
-          Iuran masuk &mdash; {filterLabel}
+        <CardContent>
+          <PeriodBadge
+            label={filterLabel}
+            className="border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400"
+          />
         </CardContent>
       </Card>
 
@@ -50,8 +67,11 @@ export function BalanceSummary({
             {formatRupiah(totalExpense)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-xs text-muted-foreground">
-          Uang keluar &mdash; {filterLabel}
+        <CardContent>
+          <PeriodBadge
+            label={filterLabel}
+            className="border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-400"
+          />
         </CardContent>
       </Card>
 
@@ -86,8 +106,8 @@ export function BalanceSummary({
             {formatRupiah(balance)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-xs text-muted-foreground">
-          Total uang tersisa (semua bulan)
+        <CardContent>
+          <PeriodBadge label="Semua bulan" className="bg-muted/50 text-muted-foreground" />
         </CardContent>
       </Card>
     </section>

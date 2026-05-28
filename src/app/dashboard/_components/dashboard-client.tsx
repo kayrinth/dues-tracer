@@ -76,6 +76,10 @@ export function DashboardClient({ payments, expenses, isAuthenticated }: Props) 
             ))}
           </SelectContent>
         </Select>
+        <p className="text-xs text-muted-foreground">
+          Total Pemasukan &amp; Pengeluaran mengikuti pilihan ini. Sisa Saldo
+          selalu dihitung dari semua bulan.
+        </p>
       </div>
 
       <Tabs defaultValue={PAYMENT_TYPES[0]} className="space-y-6">
