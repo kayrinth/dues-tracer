@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm info *)",
-      "Bash(npm ls *)"
+      "Bash(npm ls *)",
+      "Bash(del \"d:\\\\Project\\\\IuranTracker\\\\src\\\\app\\\\dashboard\\\\_components\\\\dashboard-tabs.tsx\")",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

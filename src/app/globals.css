@@ -83,3 +83,21 @@
     color: var(--foreground);
   }
 }
+
+/* Unlayered (prioritas tertinggi): batalkan display:flex dari komponen Input pada
+   month/date input, supaya layout default browser kembali aktif dan ikon kalender
+   native berada di pojok kanan. */
+input[type="month"],
+input[type="date"] {
+  display: inline-block;
+}
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-inline-start: auto;
+  cursor: pointer;
+  opacity: 0.6;
+}
+input[type="month"]::-webkit-calendar-picker-indicator:hover,
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}

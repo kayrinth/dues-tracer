@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
+import { HydrationErrorSuppressor } from "@/components/hydration-error-suppressor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,9 +16,10 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className="min-h-screen bg-background text-foreground antialiased"
+        className="min-h-screen bg-muted/30 text-foreground antialiased"
         suppressHydrationWarning
       >
+        <HydrationErrorSuppressor />
         {children}
         <Toaster richColors position="top-right" />
       </body>

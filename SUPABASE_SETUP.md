@@ -63,6 +63,46 @@ on payments
 for delete
 to authenticated
 using (auth.uid() = user_id);
+
+-- Tabel expenses (pengeluaran)
+create table expenses (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  description text not null,
+  category text not null,
+  amount numeric not null check (amount >= 0),
+  month text not null,
+  created_at timestamptz default now() not null
+);
+
+create index expenses_user_id_idx on expenses(user_id);
+create index expenses_user_month_idx on expenses(user_id, month);
+
+alter table expenses enable row level security;
+
+create policy "Public read access expenses"
+on expenses
+for select
+using (true);
+
+create policy "Authenticated users can insert expenses"
+on expenses
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+create policy "Authenticated users can update expenses"
+on expenses
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Authenticated users can delete expenses"
+on expenses
+for delete
+to authenticated
+using (auth.uid() = user_id);
 ```
 
 > **Kalau Anda sudah pernah menjalankan SQL versi lama** (dengan policy `"Users can manage their own payments"`), drop dulu policy itu:

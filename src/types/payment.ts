@@ -33,3 +33,17 @@ export type Payment = {
   month: string;
   created_at: string;
 };
+
+export const EXPENSE_CATEGORIES = PAYMENT_TYPES;
+
+export type ExpenseCategory = PaymentType;
+
+export type Expense = {
+  id: string;
+  user_id: string;
+  description: string;
+  category: ExpenseCategory;
+  amount: number;
+  month: string;
+  created_at: string;
+};
