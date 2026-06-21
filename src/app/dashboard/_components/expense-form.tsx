@@ -8,11 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { EXPENSE_CATEGORIES, type Expense, type ExpenseCategory } from "@/types/payment";
-import { currentMonthValue } from "@/lib/format";
+import { currentDateValue } from "@/lib/format";
 
 type Props = {
   category: ExpenseCategory;
-  defaults?: Pick<Expense, "description" | "amount" | "month">;
+  defaults?: Pick<Expense, "description" | "amount" | "date">;
   submitLabel: string;
 };
 
@@ -86,12 +86,12 @@ export function ExpenseFormFields({ category, defaults, submitLabel }: Props) {
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="expense-month">Bulan</Label>
+          <Label htmlFor="expense-date">Tanggal</Label>
           <Input
-            id="expense-month"
-            name="month"
-            type="month"
-            defaultValue={defaults?.month ?? currentMonthValue()}
+            id="expense-date"
+            name="date"
+            type="date"
+            defaultValue={defaults?.date ?? currentDateValue()}
             required
           />
         </div>

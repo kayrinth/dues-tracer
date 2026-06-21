@@ -13,14 +13,14 @@ import {
   type Payment,
   type PaymentType,
 } from "@/types/payment";
-import { currentMonthValue } from "@/lib/format";
+import { currentDateValue } from "@/lib/format";
 
 const selectClasses =
   "flex h-9 w-full appearance-none rounded-md border border-input bg-transparent bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat px-3 py-1 pr-9 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22/></svg>')]";
 
 type Props = {
   paymentType: PaymentType;
-  defaults?: Pick<Payment, "name" | "amount" | "month">;
+  defaults?: Pick<Payment, "name" | "amount" | "date">;
   submitLabel: string;
 };
 
@@ -104,12 +104,12 @@ export function PaymentFormFields({ paymentType, defaults, submitLabel }: Props)
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="month">Bulan</Label>
+          <Label htmlFor="date">Tanggal</Label>
           <Input
-            id="month"
-            name="month"
-            type="month"
-            defaultValue={defaults?.month ?? currentMonthValue()}
+            id="date"
+            name="date"
+            type="date"
+            defaultValue={defaults?.date ?? currentDateValue()}
             required
           />
         </div>

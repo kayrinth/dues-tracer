@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatMonthLabel, formatRupiah } from "@/lib/format";
+import { formatShortDate, formatRupiah } from "@/lib/format";
 import type { Expense, ExpenseCategory } from "@/types/payment";
 
 import { AddExpenseDialog } from "./add-expense-dialog";
@@ -59,7 +59,7 @@ export function ExpensesTable({ expenses, category, isAuthenticated }: Props) {
                   Keterangan
                 </TableHead>
                 <TableHead className={`${cellX} h-11 text-xs font-semibold uppercase tracking-wider`}>
-                  Bulan
+                  Tanggal
                 </TableHead>
                 <TableHead className={`${cellX} h-11 text-right text-xs font-semibold uppercase tracking-wider`}>
                   Nominal
@@ -78,7 +78,7 @@ export function ExpensesTable({ expenses, category, isAuthenticated }: Props) {
                     {e.description}
                   </TableCell>
                   <TableCell className={`${cellX} py-3 text-muted-foreground`}>
-                    {formatMonthLabel(e.month)}
+                    {formatShortDate(e.date)}
                   </TableCell>
                   <TableCell className={`${cellX} py-3 text-right font-medium tabular-nums text-rose-600 dark:text-rose-500`}>
                     {formatRupiah(e.amount)}

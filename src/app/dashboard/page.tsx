@@ -41,8 +41,17 @@ export default async function DashboardPage() {
     );
   }
 
-  const payments = (paymentsRes.data ?? []) as Payment[];
-  const expenses = (expensesRes.data ?? []) as Expense[];
+  // Adapter: dukung skema lama (kolom `month`) selama transisi sebelum migrasi.
+  // Setelah migrasi ke kolom `date`, fallback ini idle.
+  type LegacyDate = { date?: string; month?: string };
+  const payments = (paymentsRes.data ?? []).map((p: LegacyDate & Record<string, unknown>) => ({
+    ...p,
+    date: p.date ?? p.month ?? "",
+  })) as Payment[];
+  const expenses = (expensesRes.data ?? []).map((e: LegacyDate & Record<string, unknown>) => ({
+    ...e,
+    date: e.date ?? e.month ?? "",
+  })) as Expense[];
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 p-6">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
 import { CalendarDays, Plug, Wifi, type LucideIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,13 +18,16 @@ import {
   type Payment,
   type PaymentType,
 } from "@/types/payment";
-import { currentMonthValue, formatMonthLabel } from "@/lib/format";
+import {
+  currentMonthValue,
+  formatMonthLabel,
+  monthFromDate,
+} from "@/lib/format";
 
 import { BalanceSummary } from "./balance-summary";
 import { PaymentsTable } from "./payments-table";
 import { ExpensesTable } from "./expenses-table";
-
-const ALL_MONTHS = "__all__";
+import { ShortagesAlert } from "./shortages-alert";
 
 const TAB_ICONS: Record<PaymentType, LucideIcon> = {
   "Listrik Atas": Plug,
@@ -40,24 +42,32 @@ type Props = {
 };
 
 export function DashboardClient({ payments, expenses, isAuthenticated }: Props) {
-  const [selectedMonth, setSelectedMonth] = useState<string>(ALL_MONTHS);
-
   const availableMonths = useMemo(() => {
     const set = new Set<string>();
-    payments.forEach((p) => set.add(p.month));
-    expenses.forEach((e) => set.add(e.month));
+    payments.forEach((p) => {
+      const m = monthFromDate(p.date);
+      if (m) set.add(m);
+    });
+    expenses.forEach((e) => {
+      const m = monthFromDate(e.date);
+      if (m) set.add(m);
+    });
     set.add(currentMonthValue());
     return Array.from(set).sort().reverse();
   }, [payments, expenses]);
 
-  const filterLabel =
-    selectedMonth === ALL_MONTHS ? "Semua bulan" : formatMonthLabel(selectedMonth);
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    availableMonths[0] ?? currentMonthValue(),
+  );
 
-  const matchesMonth = (m: string) =>
-    selectedMonth === ALL_MONTHS || m === selectedMonth;
+  const filterLabel = formatMonthLabel(selectedMonth);
+
+  const matchesMonth = (date: string) => monthFromDate(date) === selectedMonth;
 
   return (
     <div className="space-y-6">
+      <ShortagesAlert payments={payments} />
+
       <div className="flex flex-col gap-2 sm:max-w-xs">
         <Label htmlFor="month-filter" className="flex items-center gap-1.5">
           <CalendarDays className="size-3.5 text-muted-foreground" />
@@ -68,7 +78,6 @@ export function DashboardClient({ payments, expenses, isAuthenticated }: Props) 
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_MONTHS}>Semua bulan</SelectItem>
             {availableMonths.map((m) => (
               <SelectItem key={m} value={m}>
                 {formatMonthLabel(m)}
@@ -77,8 +86,8 @@ export function DashboardClient({ payments, expenses, isAuthenticated }: Props) 
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
-          Total Pemasukan &amp; Pengeluaran mengikuti pilihan ini. Sisa Saldo
-          selalu dihitung dari semua bulan.
+          Tabel, Pemasukan &amp; Pengeluaran ditampilkan untuk bulan ini. Sisa
+          Saldo dihitung dari semua bulan.
         </p>
       </div>
 
@@ -108,9 +117,9 @@ export function DashboardClient({ payments, expenses, isAuthenticated }: Props) 
           const expenseAllTime = expensesForCat.reduce((s, e) => s + Number(e.amount), 0);
           const balance = incomeAllTime - expenseAllTime;
 
-          // Pemasukan & Pengeluaran pada kartu mengikuti filter bulan
-          const filteredPayments = paymentsForCat.filter((p) => matchesMonth(p.month));
-          const filteredExpenses = expensesForCat.filter((e) => matchesMonth(e.month));
+          // Filter per bulan terpilih
+          const filteredPayments = paymentsForCat.filter((p) => matchesMonth(p.date));
+          const filteredExpenses = expensesForCat.filter((e) => matchesMonth(e.date));
           const incomeFiltered = filteredPayments.reduce((s, p) => s + Number(p.total), 0);
           const expenseFiltered = filteredExpenses.reduce((s, e) => s + Number(e.amount), 0);
 

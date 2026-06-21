@@ -10,9 +10,9 @@ const paymentSchema = z.object({
   name: z.enum(PAYER_NAMES, { message: "Nama tidak dikenal." }),
   payment_type: z.enum(PAYMENT_TYPES),
   amount: z.coerce.number().nonnegative("Nominal tidak boleh negatif."),
-  month: z
+  date: z
     .string()
-    .regex(/^\d{4}-\d{2}$/, "Format bulan harus YYYY-MM."),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD."),
 });
 
 export async function createPayment(
@@ -23,7 +23,7 @@ export async function createPayment(
     name: formData.get("name"),
     payment_type: formData.get("payment_type"),
     amount: formData.get("amount"),
-    month: formData.get("month"),
+    date: formData.get("date"),
   });
 
   if (!parsed.success) {
@@ -43,7 +43,7 @@ export async function createPayment(
     payment_type: parsed.data.payment_type,
     amount: parsed.data.amount,
     total: parsed.data.amount,
-    month: parsed.data.month,
+    date: parsed.data.date,
   });
 
   if (error) return { error: error.message };
@@ -63,7 +63,7 @@ export async function updatePayment(
     name: formData.get("name"),
     payment_type: formData.get("payment_type"),
     amount: formData.get("amount"),
-    month: formData.get("month"),
+    date: formData.get("date"),
   });
 
   if (!parsed.success) {
@@ -83,7 +83,7 @@ export async function updatePayment(
       payment_type: parsed.data.payment_type,
       amount: parsed.data.amount,
       total: parsed.data.amount,
-      month: parsed.data.month,
+      date: parsed.data.date,
     })
     .eq("id", id);
 

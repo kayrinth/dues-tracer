@@ -10,9 +10,9 @@ const expenseSchema = z.object({
   description: z.string().min(1, "Keterangan wajib diisi.").max(200),
   category: z.enum(EXPENSE_CATEGORIES),
   amount: z.coerce.number().nonnegative("Nominal tidak boleh negatif."),
-  month: z
+  date: z
     .string()
-    .regex(/^\d{4}-\d{2}$/, "Format bulan harus YYYY-MM."),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD."),
 });
 
 export async function createExpense(
@@ -23,7 +23,7 @@ export async function createExpense(
     description: formData.get("description"),
     category: formData.get("category"),
     amount: formData.get("amount"),
-    month: formData.get("month"),
+    date: formData.get("date"),
   });
 
   if (!parsed.success) {
@@ -41,7 +41,7 @@ export async function createExpense(
     description: parsed.data.description,
     category: parsed.data.category,
     amount: parsed.data.amount,
-    month: parsed.data.month,
+    date: parsed.data.date,
   });
 
   if (error) return { error: error.message };
@@ -61,7 +61,7 @@ export async function updateExpense(
     description: formData.get("description"),
     category: formData.get("category"),
     amount: formData.get("amount"),
-    month: formData.get("month"),
+    date: formData.get("date"),
   });
 
   if (!parsed.success) {
@@ -80,7 +80,7 @@ export async function updateExpense(
       description: parsed.data.description,
       category: parsed.data.category,
       amount: parsed.data.amount,
-      month: parsed.data.month,
+      date: parsed.data.date,
     })
     .eq("id", id);
 

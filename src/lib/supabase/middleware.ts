@@ -27,9 +27,15 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"] = null;
+  try {
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+  } catch {
+    // Refresh token expired/invalid — treat as anonymous; cookie sudah di-clear
+    // oleh Supabase SSR client.
+    user = null;
+  }
 
   const { pathname } = request.nextUrl;
 
